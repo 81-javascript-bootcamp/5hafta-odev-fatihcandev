@@ -1,10 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/main.css';
+import './styles/main.scss';
 import PomodoroApp from './app';
 
 let pomodoroApp = new PomodoroApp({
-  tableTbodySelector: '#table-tbody',
-  taskFormSelector: '#task-form',
+  tableSelector: 'tasks-table',
+  tableTbodySelector: 'tasks-table-tbody',
+  taskFormSelector: 'task-form',
 });
 
 pomodoroApp.init();

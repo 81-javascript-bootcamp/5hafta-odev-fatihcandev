@@ -1,0 +1,107 @@
+@import '~bootstrap/scss/bootstrap';
+$blue: #007bff;
+
+$spacing-y: 15px 0;
+
+.loading {
+  position: relative;
+
+  * {
+    display: none;
+  }
+
+  .spinning-wheel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .wheel {
+      display: block;
+    }
+  }
+
+  &.lg {
+    .spinning-wheel {
+      &::after {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+}
+
+.instructions {
+  padding: $spacing-y;
+
+  h3 {
+    text-align: center;
+  }
+
+  ol {
+    width: 40%;
+    margin: 0 auto;
+  }
+}
+
+.timer {
+  text-align: center;
+  padding: $spacing-y;
+  font-size: 70px;
+  font-weight: bold;
+}
+
+.action-buttons {
+  text-align: center;
+  padding: $spacing-y;
+}
+
+#task-form {
+  button {
+    min-width: 100px;
+    height: 38px;
+    position: relative;
+  }
+}
+
+#tasks-table-tbody {
+  button {
+    min-width: 42px;
+    min-height: 38px;
+  }
+}
+
+.spinning-wheel-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .wheel {
+    width: 15px;
+    height: 15px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.4s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+body {
+  counter-reset: taskId;
+}
+
+.id-row::before {
+  counter-increment: taskId;
+  content: counter(taskId);
+}
