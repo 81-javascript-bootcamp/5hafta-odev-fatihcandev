@@ -12,20 +12,9 @@ $spacing-y: 15px 0;
 
   .spinning-wheel-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
 
     .wheel {
       display: block;
-    }
-  }
-
-  &.lg {
-    .spinning-wheel {
-      &::after {
-        width: 25px;
-        height: 25px;
-      }
     }
   }
 }
@@ -72,6 +61,8 @@ $spacing-y: 15px 0;
 
 .spinning-wheel-container {
   display: none;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
