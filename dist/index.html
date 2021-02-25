@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro App</title>
+  </head>
+  <body>
+    <div class="container fluid">
+      <div class="row">
+        <div class="col-md-12 instructions">
+          <h3>Instructions</h3>
+          <ol>
+            <li>Work for 25 uninterrupted minutes</li>
+            <li>Break for 5 minutes</li>
+            <li>
+              Every four cycles, take a 15-30 minute break, preferably outside
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 timer">25:00</div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 action-buttons">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic mixed styles example"
+          >
+            <button type="button" class="btn btn-success">Start</button>
+            <button type="button" class="btn btn-danger">Pause</button>
+          </div>
+        </div>
+      </div>
+      <form class="row g-3" id="task-form">
+        <div class="col-auto">
+          <input
+            type="text"
+            class="form-control"
+            id="inputTask"
+            placeholder="New Task"
+            required
+          />
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary mb-3">
+            <span class="text">Add task</span>
+          </button>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-md-12" id="tasks-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Task Title</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tasks-table-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="./bundle.js"></script>
+  </body>
+</html>
