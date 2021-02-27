@@ -2,7 +2,7 @@
 # Pomodoro App - Odev
 
 # 🌐 Live 
-https://5hafta-odev-fatihcandev.vercel.app/
+https://b9yzo.sse.codesandbox.io/
 
 1. Eklenen bir task yanina carpi ikonu koyularak basildiginda silinebilmeli.
 
