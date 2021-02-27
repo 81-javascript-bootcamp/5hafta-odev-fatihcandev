@@ -3,18 +3,25 @@ import {
   POMODORO_SHORT_BREAK_TIME,
   POMODORO_WORK_TIME,
 } from './constants';
-import { getTasks, createTask, deleteTask, completeTask } from './utils/api';
+import {
+  getTasks,
+  createTask,
+  deleteTask,
+  completeTask,
+  getTask,
+} from './utils/api';
 import { getRemainingDate, setMinutes } from './utils/date';
-import { toggleDisabledStateOfAllActionButtons } from './utils/toggleDisabledStateOfAllActionButtons';
-import getActionButton from './utils/getActionButton';
-import renderTaskRow from './utils/renderTaskRow';
 import {
   getTimerCycle,
   incrementTimerCycle,
   resetTimerCycle,
 } from './utils/timerCycle';
-import toggleDisabledState from './utils/toggleDisabledState';
-import toggleLoadingState from './utils/toggleLoadingState';
+import { getActionButton } from './utils/getActionButton';
+import { renderTaskRow } from './utils/renderTaskRow';
+import { getTaskRow } from './utils/getTaskRow';
+import { toggleGeneralState } from './utils/toggleGeneralState';
+import { toggleDisabledState } from './utils/toggleDisabledState';
+import { crossOutTask } from './utils/crossOutTask';
 
 class PomodoroApp {
   constructor(options) {
@@ -31,7 +38,7 @@ class PomodoroApp {
     this.$tableTbody = document.getElementById(tableTbodySelector);
     this.$taskForm = document.getElementById(taskFormSelector);
     this.$taskFormInput = this.$taskForm.querySelector('input');
-    this.$taskFormBtn = this.$taskForm.querySelector('button');
+    this.$addTaskFormBtn = this.$taskForm.querySelector('button');
     this.$startBtn = document.getElementById(startBtnSelector);
     this.$pauseBtn = document.getElementById(pauseBtnSelector);
     this.$resetBtn = document.getElementById(resetBtnSelector);
@@ -45,8 +52,13 @@ class PomodoroApp {
   fillTaskTable() {
     getTasks().then((currentTasks) => {
       currentTasks.forEach((task) => {
+        const { id, completed } = task;
         this.createTaskRow(task);
-        this.bindActionButtonEvents(task.id);
+        if (completed) {
+          const $taskRow = getTaskRow(this.$tableTbody, id);
+          crossOutTask($taskRow);
+        }
+        this.bindActionButtonEvents(id);
       });
     });
   }
@@ -58,8 +70,10 @@ class PomodoroApp {
   handleAddTask() {
     this.$taskForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      toggleDisabledState(this.$taskFormBtn);
-      toggleLoadingState(this.$taskFormBtn, true, 'white');
+      toggleGeneralState({
+        addTaskFormBtn: this.$addTaskFormBtn,
+        pressedBtn: this.$addTaskFormBtn,
+      });
       const task = { title: this.$taskFormInput.value, completed: false };
       this.handleCreateTask(task);
       this.clearInputValue();
@@ -69,9 +83,12 @@ class PomodoroApp {
   handleCreateTask(task) {
     createTask(task).then((newTask) => {
       this.createTaskRow(newTask);
-      this.bindDeleteButtonEvent(newTask.id);
-      toggleDisabledState(this.$taskFormBtn);
-      toggleLoadingState(this.$taskFormBtn, false);
+      this.bindActionButtonEvents(newTask.id);
+      toggleGeneralState({
+        addTaskFormBtn: this.$addTaskFormBtn,
+        pressedBtn: this.$addTaskFormBtn,
+        isFinished: true,
+      });
     });
   }
 
@@ -89,18 +106,22 @@ class PomodoroApp {
       taskId,
     });
     $deleteTaskButton.addEventListener('click', () => {
-      toggleDisabledStateOfAllActionButtons();
-      toggleDisabledState(this.$taskFormBtn);
-      toggleLoadingState($deleteTaskButton, true, 'white');
+      toggleGeneralState({
+        addTaskFormBtn: this.$addTaskFormBtn,
+        pressedBtn: $deleteTaskButton,
+        tableElement: this.$tableTbody,
+      });
       this.handleRemoveTask(taskId);
     });
     $startTaskBtn.addEventListener('click', () => {
       this.handleStartWorkingOnTask(taskId);
     });
     $completeTaskButton.addEventListener('click', () => {
-      toggleDisabledStateOfAllActionButtons();
-      toggleDisabledState(this.$taskFormBtn);
-      toggleLoadingState($completeTaskButton, true, 'white');
+      toggleGeneralState({
+        addTaskFormBtn: this.$addTaskFormBtn,
+        pressedBtn: $completeTaskButton,
+        tableElement: this.$tableTbody,
+      });
       this.handleCompleteTask(taskId);
     });
   }
@@ -112,11 +133,14 @@ class PomodoroApp {
         taskId: id,
         type: 'delete',
       });
-      const rowToDelete = document.querySelector(`tr[data-id="${id}"]`);
+      const rowToDelete = this.$tableTbody.querySelector(`tr[data-id="${id}"]`);
       rowToDelete?.remove();
-      toggleLoadingState($deleteTaskButton, false);
-      toggleDisabledStateOfAllActionButtons();
-      toggleDisabledState(this.$taskFormBtn);
+      toggleGeneralState({
+        addTaskFormBtn: this.$addTaskFormBtn,
+        pressedBtn: $deleteTaskButton,
+        tableElement: this.$tableTbody,
+        isFinished: true,
+      });
     });
   }
 
@@ -127,17 +151,22 @@ class PomodoroApp {
   }
 
   handleCompleteTask(taskId) {
-    completeTask(taskId).then((completedTask) => {
-      const { id } = completedTask;
-      const $completeButton = getActionButton({
-        taskId: id,
-        type: 'complete',
+    getTask(taskId).then((taskToComplete) => {
+      completeTask(taskToComplete).then((completedTask) => {
+        const { id } = completedTask;
+        const $completeButton = getActionButton({
+          taskId: id,
+          type: 'complete',
+        });
+        const $taskRow = getTaskRow(this.$tableTbody, id);
+        crossOutTask($taskRow);
+        toggleGeneralState({
+          addTaskFormBtn: this.$addTaskFormBtn,
+          pressedBtn: $completeButton,
+          tableElement: this.$tableTbody,
+          isFinished: true,
+        });
       });
-      const $taskRow = this.$tableTbody.querySelector(`#task-title-${id}`);
-      $taskRow.setAttribute('style', 'text-decoration: line-through');
-      toggleLoadingState($completeButton, false);
-      toggleDisabledStateOfAllActionButtons();
-      toggleDisabledState(this.$taskFormBtn);
     });
   }
 
