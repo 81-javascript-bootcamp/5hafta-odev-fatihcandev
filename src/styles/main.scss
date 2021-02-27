@@ -35,13 +35,19 @@ $spacing-y: 15px 0;
 .timer {
   text-align: center;
   padding: $spacing-y;
-  font-size: 70px;
-  font-weight: bold;
+  font-size: 50px;
 }
 
 .action-buttons {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: $spacing-y;
+
+  button {
+    display: flex;
+    align-items: center;
+  }
 }
 
 #task-form {
@@ -54,6 +60,8 @@ $spacing-y: 15px 0;
 
 #tasks-table-tbody {
   button {
+    display: flex;
+    align-items: center;
     min-width: 42px;
     min-height: 38px;
   }
