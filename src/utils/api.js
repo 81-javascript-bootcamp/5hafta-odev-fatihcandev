@@ -6,6 +6,12 @@ export const getTasks = async () => {
   return tasks;
 };
 
+export const getTask = async (taskId) => {
+  const data = await fetch(`${API_URL}/${taskId}`);
+  const task = await data.json();
+  return task;
+};
+
 export const createTask = async (task) => {
   const data = await fetch(API_URL, {
     method: 'POST',
@@ -32,7 +38,7 @@ export const deleteTask = async (taskId) => {
 };
 
 export const completeTask = async (task) => {
-  const data = await fetch(`${API_URL}/${taskId}`, {
+  const data = await fetch(`${API_URL}/${task.id}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
