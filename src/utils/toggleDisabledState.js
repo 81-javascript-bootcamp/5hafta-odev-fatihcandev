@@ -1,4 +1,4 @@
-const toggleDisabledState = ($element) => {
+export const toggleDisabledState = ($element) => {
   const isDisabled = $element.getAttribute('disabled') === 'true';
   if (isDisabled) {
     $element.removeAttribute('disabled');
@@ -6,5 +6,3 @@ const toggleDisabledState = ($element) => {
     $element.setAttribute('disabled', 'true');
   }
 };
-
-export default toggleDisabledState;

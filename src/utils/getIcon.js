@@ -9,7 +9,7 @@ const getIconSize = (size) => {
   }
 };
 
-const getIcon = (type, size) => {
+export const getIcon = (type, size) => {
   const iconSize = getIconSize(size);
   switch (type) {
     case 'trash':
@@ -44,5 +44,3 @@ const getIcon = (type, size) => {
       return '';
   }
 };
-
-export default getIcon;

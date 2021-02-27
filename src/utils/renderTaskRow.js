@@ -1,7 +1,7 @@
-import getIcon from './getIcon';
+import { getIcon } from './getIcon';
 
-const renderTaskRow = (task) => {
-  const { id, title } = task;
+export const renderTaskRow = (task) => {
+  const { id, title, completed } = task;
   return `
     <tr data-id="${id}">
         <td><span class="id-row"></span></td>
@@ -26,5 +26,3 @@ const renderTaskRow = (task) => {
     </tr>
 `;
 };
-
-export default renderTaskRow;

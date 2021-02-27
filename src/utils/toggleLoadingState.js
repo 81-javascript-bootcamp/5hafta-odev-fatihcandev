@@ -1,6 +1,6 @@
 import { renderSpinningWheel } from './renderSpinningWheel';
 
-const toggleLoadingState = (
+export const toggleLoadingState = (
   $element,
   shouldShow,
   spinningWheelColor,
@@ -19,5 +19,3 @@ const toggleLoadingState = (
     spinningWheel?.remove();
   }
 };
-
-export default toggleLoadingState;

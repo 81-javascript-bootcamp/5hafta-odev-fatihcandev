@@ -1,4 +1,4 @@
-import toggleDisabledState from './toggleDisabledState';
+import { toggleDisabledState } from './toggleDisabledState';
 
 export const toggleDisabledStateOfAllActionButtons = ($element) => {
   const $actionButtons = $element.querySelectorAll('button');
