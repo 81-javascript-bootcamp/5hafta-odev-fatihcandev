@@ -58,8 +58,8 @@ class PomodoroApp {
           const $taskRow = getTaskRow(this.$tableTbody, id);
           crossOutTask($taskRow);
         }
-        this.bindActionButtonEvents(id);
       });
+      this.bindActionButtonEvents();
     });
   }
 
@@ -92,55 +92,49 @@ class PomodoroApp {
     });
   }
 
-  bindActionButtonEvents(taskId) {
-    const $deleteTaskButton = getActionButton({
-      type: 'delete',
-      taskId,
-    });
-    const $startTaskBtn = getActionButton({
-      type: 'start',
-      taskId,
-    });
-    const $completeTaskButton = getActionButton({
-      type: 'complete',
-      taskId,
-    });
-    $deleteTaskButton.addEventListener('click', () => {
-      toggleGeneralState({
-        addTaskFormBtn: this.$addTaskFormBtn,
-        pressedBtn: $deleteTaskButton,
-        tableElement: this.$tableTbody,
-      });
-      this.handleRemoveTask(taskId);
-    });
-    $startTaskBtn.addEventListener('click', () => {
-      this.handleStartWorkingOnTask(taskId);
-    });
-    $completeTaskButton.addEventListener('click', () => {
-      toggleGeneralState({
-        addTaskFormBtn: this.$addTaskFormBtn,
-        pressedBtn: $completeTaskButton,
-        tableElement: this.$tableTbody,
-      });
-      this.handleCompleteTask(taskId);
+  bindActionButtonEvents() {
+    this.$tableTbody.addEventListener('click', (event) => {
+      const clickedElement = event.target.closest('button');
+      const taskId = clickedElement?.getAttribute('data-id');
+      const buttonId = clickedElement?.id;
+      if (clickedElement) {
+        if (buttonId === `delete-task-btn-${taskId}`) {
+          toggleGeneralState({
+            addTaskFormBtn: this.$addTaskFormBtn,
+            pressedBtn: clickedElement,
+            tableElement: this.$tableTbody,
+          });
+          this.handleRemoveTask(taskId);
+        } else if (buttonId === `start-task-btn-${taskId}`) {
+          this.handleStartWorkingOnTask(taskId);
+        } else if (buttonId === `complete-task-btn-${taskId}`) {
+          toggleGeneralState({
+            addTaskFormBtn: this.$addTaskFormBtn,
+            pressedBtn: clickedElement,
+            tableElement: this.$tableTbody,
+          });
+          this.handleCompleteTask(taskId);
+        }
+      }
     });
   }
 
   handleRemoveTask(taskId) {
     deleteTask(taskId).then((deletedTask) => {
       const { id } = deletedTask;
-      const $deleteTaskButton = getActionButton({
-        taskId: id,
-        type: 'delete',
-      });
+      const $deleteButton = this.$tableTbody.querySelector(
+        `#delete-task-btn-${id}`
+      );
       const rowToDelete = this.$tableTbody.querySelector(`tr[data-id="${id}"]`);
       rowToDelete?.remove();
-      toggleGeneralState({
-        addTaskFormBtn: this.$addTaskFormBtn,
-        pressedBtn: $deleteTaskButton,
-        tableElement: this.$tableTbody,
-        isFinished: true,
-      });
+      if ($deleteButton) {
+        toggleGeneralState({
+          addTaskFormBtn: this.$addTaskFormBtn,
+          pressedBtn: $deleteButton,
+          tableElement: this.$tableTbody,
+          isFinished: true,
+        });
+      }
     });
   }
 
@@ -154,18 +148,19 @@ class PomodoroApp {
     getTask(taskId).then((taskToComplete) => {
       completeTask(taskToComplete).then((completedTask) => {
         const { id } = completedTask;
-        const $completeButton = getActionButton({
-          taskId: id,
-          type: 'complete',
-        });
+        const $completeButton = this.$tableTbody.querySelector(
+          `#complete-task-btn-${id}`
+        );
         const $taskRow = getTaskRow(this.$tableTbody, id);
         crossOutTask($taskRow);
-        toggleGeneralState({
-          addTaskFormBtn: this.$addTaskFormBtn,
-          pressedBtn: $completeButton,
-          tableElement: this.$tableTbody,
-          isFinished: true,
-        });
+        if ($completeButton) {
+          toggleGeneralState({
+            addTaskFormBtn: this.$addTaskFormBtn,
+            pressedBtn: $completeButton,
+            tableElement: this.$tableTbody,
+            isFinished: true,
+          });
+        }
       });
     });
   }
