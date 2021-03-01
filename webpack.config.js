@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
@@ -11,6 +12,7 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
   },
+  devtool: false,
   module: {
     rules: [
       {
@@ -45,5 +47,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [new ESLintPlugin()],
+  plugins: [new ESLintPlugin(), new webpack.SourceMapDevToolPlugin({})],
 };
